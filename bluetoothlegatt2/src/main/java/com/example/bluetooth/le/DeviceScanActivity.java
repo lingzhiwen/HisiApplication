@@ -117,8 +117,7 @@ public class DeviceScanActivity extends Activity {
 
         // Initializes a Bluetooth adapter.  For API level 18 and above, get a reference to
         // BluetoothAdapter through BluetoothManager.
-        final BluetoothManager bluetoothManager =
-                (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+        final BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
         mBluetoothAdapter = bluetoothManager.getAdapter();
 
         mBluetoothAdapter.getProfileProxy(this, new InputDeviceServiceListener(), BluetoothProfile.HID_DEVICE);
@@ -127,53 +126,20 @@ public class DeviceScanActivity extends Activity {
         if (mBluetoothAdapter == null) {
             Toast.makeText(this, R.string.error_bluetooth_not_supported, Toast.LENGTH_SHORT).show();
             finish();
-            return;
-        }
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
-        if (!mScanning) {
-            menu.findItem(R.id.menu_stop).setVisible(false);
-            menu.findItem(R.id.menu_scan).setVisible(true);
-            menu.findItem(R.id.menu_refresh).setActionView(null);
-        } else {
-            menu.findItem(R.id.menu_stop).setVisible(true);
-            menu.findItem(R.id.menu_scan).setVisible(false);
-            menu.findItem(R.id.menu_refresh).setActionView(
-                    R.layout.actionbar_indeterminate_progress);
-        }
-        return true;
-    }
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        Log.d(TAG,"summer onKeyDown keyCode="+keyCode);
-        if ((keyCode == KeyEvent.KEYCODE_HOME)) {
-            Toast.makeText(this, "按下了e键", Toast.LENGTH_SHORT).show();
-            return true;
-        }else {
-            return super.onKeyDown(keyCode, event);
         }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
-        // Ensures Bluetooth is enabled on the device.  If Bluetooth is not currently enabled,
-        // fire an intent to display a dialog asking the user to grant permission to enable it.
-        if (!mBluetoothAdapter.isEnabled()) {
-            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
-        }
-
-        //getBondedDevices();
         registerReceiver(mBluetoothReceiver, mIntentFilter);
-        scanLeDevice(true);
-
+        if (!mBluetoothAdapter.isEnabled()) {
+            mBluetoothAdapter.enable();
+            mHndler.postDelayed(() -> scanLeDevice(true),2000);
+        }else{
+            scanLeDevice(true);
+        }
+        //getBondedDevices();
     }
 
     @Override
@@ -440,12 +406,5 @@ public class DeviceScanActivity extends Activity {
                 }
                 break;
         }
-    }
-
-    @Override
-    protected void onUserLeaveHint() {
-        //super.onUserLeaveHint();
-        Log.d(TAG,"summer onKeyDown onUserLeaveHint");
-        //Toast.makeText(this, "summer onUserLeaveHint", Toast.LENGTH_SHORT).show();
     }
 }

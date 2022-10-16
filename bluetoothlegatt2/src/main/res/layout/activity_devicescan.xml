@@ -10,11 +10,4 @@
         android:layout_height="match_parent"  
         /> 
         
-   <TextView 
-       android:layout_width="wrap_content"
-       android:layout_height="wrap_content"
-
-       android:text="@string/content"
-       android:textSize="38sp"
-       android:layout_gravity="center"/>
 </FrameLayout>
