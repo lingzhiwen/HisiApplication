@@ -12,9 +12,9 @@ public class BootBroadCastReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         if (intent.getAction().equals(ACTION)) {
             Log.i("PlayActivity", "onReceive");
-            Intent playIntent = new Intent(context, Videoplayer.class);
-            playIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(playIntent);
+//            Intent playIntent = new Intent(context, Videoplayer.class);
+//            playIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//            context.startActivity(playIntent);
         }
     }
 }
